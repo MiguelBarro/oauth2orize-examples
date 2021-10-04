@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700&display=swap");
+
+body {
+    background-color: #1a1737;
+}
+
+img {
+    width: 330px;
+    height: auto;
+}
+
+p, label#log_status, label#authorization
+{
+    font-family: 'Open Sans';
+    font-size: 16px;
+    color: #da1f4e; 
+    border: 1px solid #da1f4e; 
+    margin: 10px;
+    padding: 10px;
+    width: 290px;
+    display: block;
+    text-align: center;
+    overflow: visible;
+}
+
+div.table {
+    display: table;
+}
+
+div.table div {
+    display: table-row;
+}
+
+div.table div * {
+    display: table-cell;
+    font-family: 'Open Sans';
+    font-size: 16px;
+    margin: 10px;
+    height: 40px;
+}
+
+div.table div input {
+    outline: #da1f4e solid 2px;
+    border: none;
+    overflow: visible;
+    width: 300px;
+}
+
+div.table div label {
+    overflow: visible;
+    color: #da1f4e; 
+    padding-right: 15px;
+    font-size: 22px;
+}
+
+div.table div button,
+div.table div input.button_like 
+{
+    background-color: #da1f4e;
+    border: none;
+    text-align: center;
+    font-weight: 700;
+    overflow: visible;
+    color: white;
+    width: 310px;
+}
+
+div.table div button:disabled {
+    opacity: 0.65
+}

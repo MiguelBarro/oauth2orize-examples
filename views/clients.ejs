@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="favicon.png">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+       <!-- <script src="clients.js"/> -->
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+       <script type="application/javascript" src="clients_scripts.js"></script>
+       <div>
+           <img  alt="RAMP" src="big_logo.png" onclick="window.location.href='/'">
+       </div>
+       <form action="/clients" method="GET" >
+           <div class="table">
+              <div>
+                  <label></label>
+                  <input type="hidden" name="id" value="<%=id%>" />
+              </div>
+              <div>
+                  <label for="client_name">Client Name:</label>
+                  <input type="text" name="client_name" value="<%=name%>" oninput="update()" />
+              </div>
+              <div>
+                  <label>Client Id:</label>
+                  <input type="text" name="client_id" value="<%=clientId%>"  oninput="update()" />
+              </div>
+              <div>
+                  <label>Redirect URI:</label>
+                  <input type="url" name="redirect_uri" value="<%=redirectUri%>" oninput="update()" />
+              </div>
+              <div>
+                  <label>Client Secret:</label>
+                  <!-- don't use password because only conditionaly visible -->
+                  <input type="text" name="client_secret" value="<%=clientSecret%>" oninput="update()" />
+              </div>
+              <div>
+                  <label>Is a trusted Client?</label>
+                  <input type="checkbox" style="outline: none; width: 30px; height: 30px"
+                      name="client_trust" value="implicit_trust" oninput="update()"
+                      <%= isTrusted ? "checked" : "" %> />
+              </div>
+              <div>
+                  <label></label>
+                  <button type="submit" name="clear"> Clear Form </button>
+              </div>
+              <div>
+                  <label></label>
+                  <button type="submit" name="modify"> Remove Client </button>
+              </div>
+              <div>
+                  <label></label>
+                  <button type="submit" name="traverse" > Traverse </button>
+              </div>
+          <div>
+        </form>
+    </body>
+</html>

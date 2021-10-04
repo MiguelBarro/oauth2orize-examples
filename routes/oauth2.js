@@ -1,6 +1,7 @@
 'use strict';
 
-const oauth2orize = require('@poziworld/oauth2orize');
+// const oauth2orize = require('@poziworld/oauth2orize');
+const oauth2orize = require('oauth2orize');
 const passport = require('passport');
 const login = require('connect-ensure-login');
 const db = require('../db');
@@ -22,29 +23,35 @@ const server = oauth2orize.createServer();
 // simple matter of serializing the client's ID, and deserializing by finding
 // the client by ID from the database.
 
-server.serializeClient((client, done) => done(null, client.id));
+server.serializeClient(
+    (client, done) =>
+    {
+        let id = db.clients.findByClientId(client.clientId);
+        done(null, id)
+    });
 
-server.deserializeClient((id, done) => {
-  db.clients.findById(id, (error, client) => {
-    if (error) return done(error);
-    return done(null, client);
-  });
-});
+server.deserializeClient(
+    (id, done) => {
+        db.clients.findById(id, (error, client) => {
+            if (error) return done(error);
+            return done(null, client);
+        });
+    });
 
 function issueTokens(userId, clientId, done) {
-  db.users.findById(userId, (error, user) => {
-    const accessToken = utils.getUid(256);
-    const refreshToken = utils.getUid(256);
-    db.accessTokens.save(accessToken, userId, clientId, (error) => {
-      if (error) return done(error);
-      db.refreshTokens.save(refreshToken, userId, clientId, (error) => {
-        if (error) return done(error);
-        // Add custom params, e.g. the username
-        const params = { username: user.name };
-        return done(null, accessToken, refreshToken, params);
-      });
+    db.users.findById(userId, (error, user) => {
+        const accessToken = utils.getUid(256);
+        const refreshToken = utils.getUid(256);
+        db.accessTokens.save(accessToken, userId, clientId, (error) => {
+            if (error) return done(error);
+            db.refreshTokens.save(refreshToken, userId, clientId, (error) => {
+                if (error) return done(error);
+                // Add custom params, e.g. the username
+                const params = { username: user.name };
+                return done(null, accessToken, refreshToken, params);
+            });
+        });
     });
-  });
 }
 
 // Register supported grant types.
@@ -63,7 +70,11 @@ function issueTokens(userId, clientId, done) {
 
 server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, done) => {
   const code = utils.getUid(16);
-  db.authorizationCodes.save(code, client.id, redirectUri, user.id, user.username, (error) => {
+
+  let cid = db.clients.findByClientId(client.clientId);
+  let uid = db.users.findByUsername(user.username);
+
+  db.authorizationCodes.save(code, cid, redirectUri, uid, user.username, (error) => {
     if (error) return done(error);
     return done(null, code);
   });
@@ -76,7 +87,8 @@ server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, done) => {
 // values.
 
 server.grant(oauth2orize.grant.token((client, user, ares, done) => {
-  issueTokens(user.id, client.clientId, done);
+    let uid = db.users.findByUsername(user.username);
+    issueTokens(uid, client.clientId, done);
 }));
 
 // Exchange authorization codes for access tokens. The callback accepts the
@@ -89,7 +101,8 @@ server.grant(oauth2orize.grant.token((client, user, ares, done) => {
 server.exchange(oauth2orize.exchange.code((client, code, redirectUri, done) => {
   db.authorizationCodes.find(code, (error, authCode) => {
     if (error) return done(error);
-    if (client.id !== authCode.clientId) return done(null, false);
+    let cid = db.clients.findByClientId(client.clientId);
+    if (cid !== authCode.clientId) return done(null, false);
     if (redirectUri !== authCode.redirectUri) return done(null, false);
 
     issueTokens(authCode.userId, client.clientId, done);
@@ -113,7 +126,8 @@ server.exchange(oauth2orize.exchange.password((client, username, password, scope
       if (!user) return done(null, false);
       if (password !== user.password) return done(null, false);
       // Everything validated, return the token
-      issueTokens(user.id, client.clientId, done);
+      let uid = db.users.findByUsername(user.username);
+      issueTokens(uid, client.clientId, done);
     });
   });
 }));
@@ -139,7 +153,9 @@ server.exchange(oauth2orize.exchange.clientCredentials((client, scope, done) => 
 server.exchange(oauth2orize.exchange.refreshToken((client, refreshToken, scope, done) => {
   db.refreshTokens.find(refreshToken, (error, token) => {
     if (error) return done(error);
-    issueTokens(token.id, client.id, (err, accessToken, refreshToken) => {
+    let cid = db.clients.findByClientId(client.clientId);
+    let tid = db.refreshTokens.get_id(token.token);
+    issueTokens(tid, cid, (err, accessToken, refreshToken) => {
       if (err) {
         done(err, null, null);
       }
@@ -179,10 +195,10 @@ module.exports.authorization = [
   server.authorization((clientId, redirectUri, done) => {
     db.clients.findByClientId(clientId, (error, client) => {
       if (error) return done(error);
-      // WARNING: For security purposes, it is highly advisable to check that
-      //          redirectUri provided by the client matches one registered with
-      //          the server. For simplicity, this example does not. You have
-      //          been warned.
+      if (client.redirectUri != redirectUri )
+      {
+          return done(new Error("The preregistered redirect_url doesn't match request one."));
+      }
       return done(null, client, redirectUri);
     });
   }, (client, user, done) => {
@@ -191,7 +207,8 @@ module.exports.authorization = [
     // Auto-approve
     if (client.isTrusted) return done(null, true);
 
-    db.accessTokens.findByUserIdAndClientId(user.id, client.clientId, (error, token) => {
+    let uid = db.users.findByUsername(user.username);
+    db.accessTokens.findByUserIdAndClientId(uid, client.clientId, (error, token) => {
       // Auto-approve
       if (token) return done(null, true);
 

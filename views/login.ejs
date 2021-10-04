@@ -1,15 +1,28 @@
-<form action="/login" method="post">
-	<div>
-  	<label>Username:</label>
-  	<input type="text" name="username" /><br/>
-	</div>
-	<div>
-  	<label>Password:</label>
-  	<input type="password" name="password" />
-	</div>
-	<div>
-	  <input type="submit" value="Submit" />
-	</div>
-</form>
-<p><small>Hint - bob:secret</small></p>
-<p><small>Hint - joe:password</small></p>
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="favicon.png">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+       <div>
+           <img  alt="RAMP" src="big_logo.png" onclick="window.location.href='/'">
+       </div>
+       <form action="/login" method="post">
+           <div class="table">
+              <div>
+                  <label>Username:</label>
+                  <input type="text" name="username" />
+              </div>
+              <div>
+                  <label>Password:</label>
+                  <input type="password" name="password" />
+              </div>
+              <div>
+                  <label></label>
+                  <button type="submit" > Submit </button>
+              </div>
+          <div>
+        </form>
+    </body>
+</html>

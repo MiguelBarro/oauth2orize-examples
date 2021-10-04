@@ -1,0 +1,1 @@
+[[1,{"name":"eProsima","clientId":"eProsima","redirectUri":"http://localhost:6338/auth/callback","clientSecret":"64ea052b-246f-4706-a1fc-5a47764973b3","isTrusted":false}],[2,{"name":"microsoft","clientId":"microsoft","redirectUri":"http://www.msdn.com","clientSecret":"bjarne","isTrusted":true}]]

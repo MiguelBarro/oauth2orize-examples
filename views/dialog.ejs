@@ -1,11 +1,27 @@
-<p>Hi <%= user.name %>!</p>
-<p><b><%= client.name %></b> is requesting access to your account.</p>
-<p>Do you approve?</p>
-
-<form action="/dialog/authorize/decision" method="post">
-  <input name="transaction_id" type="hidden" value="<%= transactionId %>" />
-  <div>
-    <input type="submit" value="Allow" id="allow" />
-    <input type="submit" value="Deny" name="cancel" id="deny" />
-  </div>
-</form>
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="/favicon.png">
+        <link rel="stylesheet" type="text/css" href="/style.css">
+    <body>
+       <div>
+           <img  alt="RAMP" src="/big_logo.png" onclick="window.location.href='/'">
+       </div>
+       <p>Hi <%= user.name %>!</br>
+       <b><%= client.name %></b> is requesting access to your account.</br>
+       Do you approve?</p>
+       <form action="/dialog/authorize/decision" method="post">
+           <div class="table">
+              <div>
+                  <input name="transaction_id" type="hidden" value="<%= transactionId %>" />
+              </div>
+              <div>
+                  <input type="submit" value="Allow" id="allow" class="button_like" />
+              </div>
+              <div>
+                  <input type="submit" value="Deny" name="cancel" id="deny" class="button_like" />
+              </div>
+           </div>
+       </form> 
+     </body>
+</html>

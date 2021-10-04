@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="../favicon.png">
+        <link rel="stylesheet" type="text/css" href="../style.css">
+    </head>
+    <body>
+       <div>
+           <img  alt="RAMP" src="../big_logo.png">
+       </div>
+       <div>
+          <label id="authorization">
+              Hi <%= user.name %>!<br />
+              <b><%= client.name %></b> is requesting <br />
+              access to your account.<br />
+              Do you approve?
+          </label>
+       </div>
+       <form action="/dialog/authorize/decision" method="post">
+          <div class="table">
+             <div>
+                 <input name="transaction_id" type="hidden" value="<%= transactionId %>" />
+             </div>
+             <div>
+                 <input type="submit" value="Allow" id="allow"/>
+             </div>
+             <div>
+                 <input type="submit" value="Deny" name="cancel" id="deny"/>
+              </div>
+           </div>
+       </form> 
+    </body>
+</html>

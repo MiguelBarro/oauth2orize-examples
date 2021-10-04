@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="favicon.png">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+       <div>
+           <img  alt="RAMP" src="big_logo.png">
+       </div>
+       <label id="log_status"><%=user_identity%></label>
+       <div>
+       </div>
+       <form>
+           <div class="table">
+              <div>
+                  <button formaction="clients"> Modify clients </button>
+              </div>
+              <div>
+                  <button formaction="users"> Modify users </button>
+              </div>
+              <div>
+                  <button formaction="login"> Login </button>
+              </div>
+              <div>
+                  <button formaction="logout"> Logout </button>
+              </div>
+              <div>
+                  <button formaction="reset"> Clear tokens </button>
+              </div>
+              <div>
+                  <button formaction="http://localhost:6338"> Access eProsima Client </button>
+              </div>
+           </div>
+       </form> 
+    </body>
+</html>
